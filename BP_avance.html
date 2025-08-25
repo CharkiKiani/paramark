@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Centrale d’Achat IA – Présentation</title>
+  <meta name="description" content="Première centrale d’achat intelligente B2B & B2C au Maroc, propulsée par l’IA : collecte, comparaison, recommandations, et logistique régulée." />
+  <style>
+    :root{
+      --bg: #0f172a;            /* slate-900 */
+      --panel: #111827;         /* gray-900 */
+      --muted: #94a3b8;         /* slate-400 */
+      --text: #e5e7eb;          /* gray-200 */
+      --primary: #14b8a6;       /* teal-500 */
+      --primary-2: #38bdf8;     /* sky-400 */
+      --border: #1f2937;        /* gray-800 */
+      --chip: #0b1326;          
+      --ok: #10b981;            
+      --warn: #f59e0b;          
+      --bad: #ef4444;           
+      --radius-2xl: 1.25rem;
+      --shadow-lg: 0 20px 40px rgba(0,0,0,.35), 0 2px 10px rgba(0,0,0,.25);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: linear-gradient(180deg, #0b1022 0%, var(--bg) 50%); color: var(--text);} 
+
+    .wrap{max-width:1200px; margin: 24px auto; padding: 16px;}
+
+    header{
+      display:grid; gap:14px; grid-template-columns: 72px 1fr; align-items:center; padding: 18px; background: radial-gradient(1200px 400px at 20% -10%, rgba(56,189,248,.15), transparent 60%), var(--panel); border:1px solid var(--border); border-radius: var(--radius-2xl); box-shadow: var(--shadow-lg);
+    }
+    .logo{
+      width:72px;height:72px;border-radius:18px;display:grid;place-items:center;background: linear-gradient(135deg, rgba(20,184,166,.25), rgba(56,189,248,.2)); border:1px solid #164e63;
+    }
+    .title h1{margin:0;font-size:clamp(22px, 3vw, 34px);letter-spacing:.2px}
+    .title p{margin:6px 0 0;color:var(--muted);font-size:clamp(13px,1.6vw,15px)}
+
+    /* Tabs */
+    .tabs{margin-top:16px; display:grid; gap:12px; grid-template-columns: 1fr;}
+    .tablist{display:flex; flex-wrap:wrap; gap:8px; background:rgba(17,24,39,.6); padding:10px; border:1px solid var(--border); border-radius: var(--radius-2xl); position:sticky; top:10px; z-index:5; backdrop-filter: blur(8px)}
+    .tab-btn{
+      appearance:none; border:none; padding:10px 14px; border-radius:999px; background:var(--chip); color:var(--text); cursor:pointer; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; border:1px solid #0f1a34; font-weight:600; font-size:13px; letter-spacing:.2px; display:flex; align-items:center; gap:8px;
+    }
+    .tab-btn svg{opacity:.9}
+    .tab-btn[aria-selected="true"]{ background: linear-gradient(90deg, rgba(20,184,166,.2), rgba(56,189,248,.18)); box-shadow: 0 0 0 2px rgba(56,189,248,.15) inset;}
+    .tab-btn:focus-visible{outline:2px solid var(--primary-2); outline-offset:2px}
+    .tab-btn:hover{ transform: translateY(-1px)}
+
+    .tabpanels{ display:grid; gap:12px;}
+    .panel{ display:none; padding:18px; border:1px solid var(--border); background:linear-gradient(180deg, rgba(2,6,23,.7), rgba(2,6,23,.3)); border-radius: var(--radius-2xl); box-shadow: var(--shadow-lg)}
+    .panel.active{ display:block; animation: fade .25s ease}
+    @keyframes fade{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:translateY(0)}}
+
+    /* Cards / grids */
+    .grid{ display:grid; gap:14px}
+    .grid.cols-2{ grid-template-columns: 1fr }
+    .grid.cols-3{ grid-template-columns: 1fr }
+    @media(min-width:760px){
+      .grid.cols-2{ grid-template-columns: 1fr 1fr }
+      .grid.cols-3{ grid-template-columns: repeat(3, 1fr) }
+    }
+
+    .card{ background: rgba(2,6,23,.5); border:1px solid var(--border); border-radius: 16px; padding: 14px; box-shadow: 0 6px 18px rgba(0,0,0,.25)}
+    .card h3{margin:.2rem 0 .5rem; font-size:16px}
+    .muted{ color: var(--muted); font-size: 14px }
+
+    h2{margin:.2rem 0 1rem; font-size: clamp(18px, 2.5vw, 22px)}
+    ul{margin: 8px 0 0 1rem}
+    li{margin:4px 0}
+
+    .chip{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:var(--chip); border:1px solid #0f1a34; font-size:12px}
+    .kpi{ display:flex; gap:10px; align-items:center }
+    .kpi strong{ font-size:18px }
+
+    /* SVG area */
+    .diagram{ background: radial-gradient(500px 250px at 20% 0%, rgba(20,184,166,.12), transparent 60%); border:1px solid var(--border); border-radius:16px; padding:10px }
+
+    /* Accordion (inside panels) */
+    details{ background: rgba(2,6,23,.45); border:1px solid var(--border); border-radius:12px; padding: 10px 12px; margin:10px 0}
+    summary{ cursor:pointer; font-weight:600 }
+
+    /* Footer */
+    footer{ color: var(--muted); font-size:13px; text-align:center; padding:18px }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true">
+        <!-- Inline SVG logo: IA shopping + compare -->
+        <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo IA">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#38bdf8" stop-opacity=".9"/>
+              <stop offset="1" stop-color="#14b8a6" stop-opacity=".9"/>
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="52" height="52" rx="12" stroke="url(#g1)" fill="rgba(2,6,23,.5)"/>
+          <path d="M20 26h24M20 34h24M20 42h14" stroke="url(#g1)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="45" cy="42" r="5" stroke="#38bdf8"/>
+          <path d="M48.5 45.5l4 4" stroke="#38bdf8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="title">
+        <h1>Centrale d’Achat IA – B2B & B2C (Maroc)</h1>
+        <p>Collecte, comparaison & recommandations de produits (OTC, parapharmacie, réactifs & consommables de labo) avec logistique régulée.</p>
+        <div class="kpi" style="margin-top:8px">
+          <span class="chip">IA & NLP</span>
+          <span class="chip">Comparateur intelligent</span>
+          <span class="chip">Logistique température/ADR</span>
+          <span class="chip">Marketplace + Centrale</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tablist" role="tablist" aria-label="Segments du business plan" id="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-vision" id="tab-vision">
+        <!-- icon lightbulb -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a7 7 0 00-4 12.9V18a2 2 0 002 2h4a2 2 0 002-2v-2.1A7 7 0 0012 3z" stroke="currentColor"/></svg>
+        Concept & Business Model
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-obj" id="tab-obj">Objectifs</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-marche" id="tab-marche">Analyse de Marché</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-valeur" id="tab-valeur">Proposition de Valeur</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-bm" id="tab-bm">Modèle Éco</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-tech" id="tab-tech">Produit & Tech</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-go" id="tab-go">Go‑to‑Market</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-org" id="tab-org">Organisation</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-fin" id="tab-fin">Prévisions</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-kfs" id="tab-kfs">Succès</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-chiffres" id="tab-chiffres">Marché & chiffres</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-chiffrage" id="tab-chiffrage">Chiffrage 24 mois</button>
+    </nav>
+
+    <section class="tabpanels">
+      <!-- 1) Concept & Business Model -->
+      <article id="panel-vision" class="panel active" role="tabpanel" aria-labelledby="tab-vision">
+        <h2>Concept & Business Model</h2>
+        <p class="muted">Première centrale d’achat intelligente au Maroc : une place de marché hybride (marketplace + centrale) où l’IA collecte, normalise et compare les offres locales & internationales pour B2B et B2C.</p>
+        <div class="grid cols-2">
+          <div class="card diagram">
+            <h3>Illustration du Flux</h3>
+            <!-- Responsive SVG diagram -->
+            <svg viewBox="0 0 900 420" role="img" aria-label="Flux conceptuel centrale d’achat IA" style="width:100%;height:auto">
+              <defs>
+                <linearGradient id="gradA" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity=".8"/>
+                  <stop offset="100%" stop-color="#14b8a6" stop-opacity=".8"/>
+                </linearGradient>
+                <filter id="glow"><feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#38bdf8" flood-opacity="0.2"/></filter>
+              </defs>
+              <!-- Suppliers -->
+              <g transform="translate(40,40)">
+                <rect width="220" height="110" rx="14" fill="rgba(20,184,166,.08)" stroke="#155e75"/>
+                <text x="14" y="28" fill="#e5e7eb" font-size="16" font-weight="700">Fournisseurs</text>
+                <text x="14" y="52" fill="#94a3b8" font-size="13">Grossistes, fabricants,</text>
+                <text x="14" y="72" fill="#94a3b8" font-size="13">catalogues locaux & internationaux</text>
+              </g>
+              <!-- Ingestion IA -->
+              <g transform="translate(330,40)">
+                <rect width="240" height="160" rx="14" fill="rgba(56,189,248,.08)" stroke="#0ea5e9"/>
+                <text x="14" y="28" fill="#e5e7eb" font-size="16" font-weight="700">Ingestion & IA</text>
+                <text x="14" y="52" fill="#94a3b8" font-size="13">Scraping / API / ERP</text>
+                <text x="14" y="72" fill="#94a3b8" font-size="13">NLP/NER, classification</text>
+                <text x="14" y="92" fill="#94a3b8" font-size="13">Normalisation (prix, stock, délais)</text>
+                <text x="14" y="112" fill="#94a3b8" font-size="13">Conformité (CE/FDA, péremption)</text>
+              </g>
+              <!-- Comparateur -->
+              <g transform="translate(640,40)">
+                <rect width="220" height="110" rx="14" fill="rgba(2,6,23,.6)" stroke="#1f2937"/>
+                <text x="14" y="28" fill="#e5e7eb" font-size="16" font-weight="700">Comparateur</text>
+                <text x="14" y="52" fill="#94a3b8" font-size="13">Prix • Délai • Qualité</text>
+                <text x="14" y="72" fill="#94a3b8" font-size="13">Réputation fournisseur</text>
+              </g>
+              <!-- Buyers -->
+              <g transform="translate(160,250)">
+                <rect width="220" height="110" rx="14" fill="rgba(2,6,23,.6)" stroke="#1f2937"/>
+                <text x="14" y="28" fill="#e5e7eb" font-size="16" font-weight="700">Acheteurs B2B</text>
+                <text x="14" y="52" fill="#94a3b8" font-size="13">PME, grands comptes, labos</text>
+              </g>
+              <g transform="translate(420,250)">
+                <rect width="220" height="110" rx="14" fill="rgba(2,6,23,.6)" stroke="#1f2937"/>
+                <text x="14" y="28" fill="#e5e7eb" font-size="16" font-weight="700">Acheteurs B2C‑pro</text>
+                <text x="14" y="52" fill="#94a3b8" font-size="13">Para & pros industrie</text>
+              </g>
+              <!-- Logistique -->
+              <g transform="translate(680,250)">
+                <rect width="180" height="120" rx="14" fill="rgba(20,184,166,.08)" stroke="#155e75"/>
+                <text x="14" y="28" fill="#e5e7eb" font-size="16" font-weight="700">Logistique</text>
+                <text x="14" y="52" fill="#94a3b8" font-size="13">Température • ADR</text>
+                <text x="14" y="72" fill="#94a3b8" font-size="13">Groupage import/export</text>
+              </g>
+              <!-- arrows -->
+              <path d="M260 95 H330" stroke="url(#gradA)" stroke-width="3" marker-end="url(#arr)" filter="url(#glow)"/>
+              <path d="M570 120 H640" stroke="url(#gradA)" stroke-width="3" marker-end="url(#arr)" filter="url(#glow)"/>
+              <path d="M540 200 V250" stroke="url(#gradA)" stroke-width="3" marker-end="url(#arr)" filter="url(#glow)"/>
+              <path d="M470 200 V250" stroke="url(#gradA)" stroke-width="3" marker-end="url(#arr)" filter="url(#glow)"/>
+              <path d="M640 95 C690 95, 700 140, 700 250" stroke="#38bdf8" stroke-dasharray="6 6"/>
+              <defs>
+                <marker id="arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#38bdf8"/>
+                </marker>
+              </defs>
+            </svg>
+          </div>
+          <div class="grid cols-1">
+            <div class="card">
+              <h3>Proposition de valeur</h3>
+              <ul>
+                <li>Collecte/normalisation OTC, para, réactifs & consommables labo.</li>
+                <li>Suivi disponibilité & dates de péremption.</li>
+                <li>Recommandations IA par usage (analyses / agro‑alimentaire).</li>
+                <li>Logistique régulée (température / ADR).</li>
+                <li>Comparateur prix‑délai‑conformité & dossiers techniques.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Business Model (hybride)</h3>
+              <ul>
+                <li>Marketplace + centrale d’achat (pouvoir de négociation).</li>
+                <li>Commissions, abonnements B2B, services logistiques, data‑intel, mise en avant.</li>
+                <li>Expérience fluide : achat en 3 clics, conseil IA 24/7.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2) Objectifs -->
+      <article id="panel-obj" class="panel" role="tabpanel" aria-labelledby="tab-obj">
+        <h2>Objectifs du Projet</h2>
+        <div class="grid cols-3">
+          <div class="card"><h3>Leadership</h3><p class="muted">Créer la première centrale d’achat intelligente au Maroc.</p></div>
+          <div class="card"><h3>Économies</h3><p class="muted">Générer 10–30 % d’économies via prix + logistique optimisés.</p></div>
+          <div class="card"><h3>Scalabilité</h3><p class="muted">Intégrer de nouveaux fournisseurs automatiquement (scraping / API).</p></div>
+        </div>
+      </article>
+
+      <!-- 3) Analyse de Marché -->
+      <article id="panel-marche" class="panel" role="tabpanel" aria-labelledby="tab-marche">
+        <h2>Analyse de Marché</h2>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Cibles</h3>
+            <ul>
+              <li><strong>B2B</strong> : PME, grandes entreprises, revendeurs, distributeurs, labos, industriels agroalimentaires, parapharmacies.</li>
+              <li><strong>B2C‑pro</strong> : Pros recherchant comparaisons prix/qualité.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Tendances & IA</h3>
+            <ul>
+              <li>E‑commerce B2B/B2C en croissance (Maroc).</li>
+              <li>Transparence prix & traçabilité (lots, certificats).</li>
+              <li>IA pour substitutions, prévisions, chaîne froide, négociation.</li>
+            </ul>
+          </div>
+        </div>
+        <details>
+          <summary>Chiffres clés & références internationales</summary>
+          <p class="muted">Pharma MEA ~32,6 Md$ (2024), consumables labo MEA CAGR ~5,7 %, adoption GenAI 65 % (2024)…</p>
+        </details>
+      </article>
+
+      <!-- 4) Valeur ajoutée -->
+      <article id="panel-valeur" class="panel" role="tabpanel" aria-labelledby="tab-valeur">
+        <h2>Proposition de Valeur ajoutée</h2>
+        <div class="grid cols-3">
+          <div class="card"><h3>IA de collecte</h3><p class="muted">Scraping + NLP pour prix, dispo, fiches techniques.</p></div>
+          <div class="card"><h3>Comparateur</h3><p class="muted">Pondération prix + délai + qualité + réputation.</p></div>
+          <div class="card"><h3>Conseil IA</h3><p class="muted">Chatbot d’aide au choix & alternatives.</p></div>
+          <div class="card"><h3>Logistique</h3><p class="muted">Température contrôlée, ADR, groupage.</p></div>
+          <div class="card"><h3>Personnalisation</h3><p class="muted">Par usage, budget, conformité.</p></div>
+          <div class="card"><h3>Double approche</h3><p class="muted">B2B (négociation) & B2C‑pro (offres temps réel).</p></div>
+        </div>
+      </article>
+
+      <!-- 5) Modèle économique -->
+      <article id="panel-bm" class="panel" role="tabpanel" aria-labelledby="tab-bm">
+        <h2>Modèle Économique</h2>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Sources de revenus</h3>
+            <ul>
+              <li>Commissions (2–8 %).</li>
+              <li>Abonnements B2B (analyses, alertes, consolidation).</li>
+              <li>Services logistiques (transport, stockage, groupage).</li>
+              <li>Data intelligence (rapports, tendances, benchmarking).</li>
+              <li>Publicité / mise en avant fournisseurs.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Structure de coûts</h3>
+            <ul>
+              <li>Plateforme IA (web/mobile, backend IA).</li>
+              <li>Infra cloud & API scraping.</li>
+              <li>Équipe (data, sales, support).</li>
+              <li>Marketing & acquisition.</li>
+              <li>Partenariats logistiques & bancaires.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6) Produit & Technologie -->
+      <article id="panel-tech" class="panel" role="tabpanel" aria-labelledby="tab-tech">
+        <h2>Produit & Technologie</h2>
+        <div class="grid cols-3">
+          <div class="card"><h3>Ingestion multi‑sources</h3><p class="muted">Sites para, grossistes, fabricants, PDF.</p></div>
+          <div class="card"><h3>NLP/NER</h3><p class="muted">Extraction DCI, REF, normes (ISO, CE IVD).</p></div>
+          <div class="card"><h3>Moteur conformité</h3><p class="muted">Alerte péremption/lot, FDS, certificats CE/FDA.</p></div>
+          <div class="card"><h3>Reco IA</h3><p class="muted">Équivalents fonctionnels & réglementaires.</p></div>
+          <div class="card"><h3>Logistique calculée</h3><p class="muted">Délais & coûts multi‑transporteurs.</p></div>
+          <div class="card"><h3>Blockchain (optionnel)</h3><p class="muted">Traçabilité & certification.</p></div>
+        </div>
+        <details>
+          <summary>Pipeline technique</summary>
+          <ul>
+            <li>Collecte : scraping, APIs, intégrations ERP.</li>
+            <li>Traitement : classification, extraction attributs, normalisation.</li>
+            <li>Comparaison : algorithmes multi‑critères.</li>
+            <li>Interaction : chatbot IA & tableau de bord.</li>
+          </ul>
+        </details>
+      </article>
+
+      <!-- 7) Go-to-Market -->
+      <article id="panel-go" class="panel" role="tabpanel" aria-labelledby="tab-go">
+        <h2>Stratégie Marketing & Commerciale</h2>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Canaux</h3>
+            <ul>
+              <li>B2B : accords grossistes santé/labo, centrales privées, intégrations LIMS/ERP.</li>
+              <li>B2C‑pro : portail para pro, abonnement « réassort ».</li>
+              <li>Partenariats : importateurs équipements, hubs logistiques, assureurs santé.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Acquisition & fidélisation</h3>
+            <ul>
+              <li>Campagnes LinkedIn/Facebook/Instagram.</li>
+              <li>Chambres de commerce, syndicats pros, affiliation fournisseurs.</li>
+              <li>Alertes prix, nouveaux produits, support IA 24/7.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- 8) Organisation -->
+      <article id="panel-org" class="panel" role="tabpanel" aria-labelledby="tab-org">
+        <h2>Organisation & Ressources Humaines</h2>
+        <div class="grid cols-3">
+          <div class="card"><h3>CEO / Fondateur</h3><p class="muted">Vision stratégique & partenariats.</p></div>
+          <div class="card"><h3>CTO</h3><p class="muted">Développement IA & plateforme.</p></div>
+          <div class="card"><h3>Data Engineers</h3><p class="muted">Scraping, NLP, intégration.</p></div>
+          <div class="card"><h3>Achats & Logistique</h3><p class="muted">Négociation fournisseurs, transporteurs.</p></div>
+          <div class="card"><h3>Sales & Marketing</h3><p class="muted">Acquisition & croissance.</p></div>
+          <div class="card"><h3>Support Client</h3><p class="muted">Accompagnement utilisateurs.</p></div>
+        </div>
+      </article>
+
+      <!-- 9) Prévisions financières -->
+      <article id="panel-fin" class="panel" role="tabpanel" aria-labelledby="tab-fin">
+        <h2>Prévisions Financières (3 ans)</h2>
+        <div class="card">
+          <div class="grid cols-3">
+            <div>
+              <h3>Année 1</h3>
+              <p class="muted">CA: 0,8 M€ • BN: -0,3 M€ • 100 PME • 5 000 B2C</p>
+            </div>
+            <div>
+              <h3>Année 2</h3>
+              <p class="muted">CA: 3,0 M€ • BN: 0,5 M€ • 500 PME • 20 000 B2C</p>
+            </div>
+            <div>
+              <h3>Année 3</h3>
+              <p class="muted">CA: 8,5 M€ • BN: 2,2 M€ • 2 000 PME • 80 000 B2C</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 10) Facteurs clés de succès -->
+      <article id="panel-kfs" class="panel" role="tabpanel" aria-labelledby="tab-kfs">
+        <h2>Facteurs Clés de Succès</h2>
+        <ul>
+          <li>Collecte IA fiable & rapide.</li>
+          <li>Base fournisseurs large (local + international).</li>
+          <li>UX fluide (achat en 3 clics).</li>
+          <li>Partenariats logistiques solides.</li>
+          <li>Branding : intelligence & transparence.</li>
+        </ul>
+      </article>
+
+      <!-- 11) Marché & chiffres -->
+      <article id="panel-chiffres" class="panel" role="tabpanel" aria-labelledby="tab-chiffres">
+        <h2>Marché & Chiffres (potentiel)</h2>
+        <ul>
+          <li>Pharma/para MEA : ~32–34 Md$ ; croissance +7–12 %.</li>
+          <li>Consumables labo MEA : CAGR ~5,7 %.</li>
+          <li>E‑commerce Maroc : ~1,6 Md$ (2024) → ~2,6 Md$ (2029).</li>
+          <li>Avantage logistique : Tanger Med (lead time & coûts).</li>
+          <li>Réglementation paiements : ouverture & conditions non‑discriminatoires.</li>
+        </ul>
+      </article>
+
+      <!-- 12) Chiffrage -->
+      <article id="panel-chiffrage" class="panel" role="tabpanel" aria-labelledby="tab-chiffrage">
+        <h2>Chiffrage (hypothèses 24 mois – Maroc)</h2>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>GMV & marges</h3>
+            <ul>
+              <li>Industrie : 15–25 M MAD • take‑rate 6–8 %.</li>
+              <li>Para/Labo : 10–18 M MAD • take‑rate 7–9 %.</li>
+              <li>EBITDA positif dès 18–24 mois (si CAC/B2B &lt; 10k MAD).</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Leviers ROI IA</h3>
+            <ul>
+              <li>-10–15 % TCO client.</li>
+              <li>+3–5 pts fill‑rate.</li>
+              <li>-20–30 % temps de sourcing.</li>
+              <li>-15–25 % stock dormant.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      © Centrale d’Achat IA – Démonstrateur de présentation. Palette sobre, UI responsive, illustrations SVG.
+    </footer>
+  </div>
+
+  <script>
+    // Accessible tabs
+    const tablist = document.getElementById('tablist');
+    const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+    const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+
+    function activateTab(tab){
+      tabs.forEach(t=>{
+        const selected = t === tab;
+        t.setAttribute('aria-selected', String(selected));
+        t.tabIndex = selected ? 0 : -1;
+      });
+      panels.forEach(p=> p.classList.toggle('active', p.id === tab.getAttribute('aria-controls')));
+    }
+
+    tabs.forEach(t=>{
+      t.addEventListener('click', ()=> activateTab(t));
+      t.addEventListener('keydown', (e)=>{
+        const i = tabs.indexOf(t);
+        if(e.key === 'ArrowRight'){ e.preventDefault(); activateTab(tabs[(i+1)%tabs.length]); tabs[(i+1)%tabs.length].focus(); }
+        if(e.key === 'ArrowLeft'){ e.preventDefault(); activateTab(tabs[(i-1+tabs.length)%tabs.length]); tabs[(i-1+tabs.length)%tabs.length].focus(); }
+      })
+    });
+
+    // Deep link via hash (e.g., #panel-tech)
+    function openFromHash(){
+      const id = location.hash.replace('#','');
+      const tab = tabs.find(t => t.getAttribute('aria-controls')===id);
+      if(tab) activateTab(tab);
+    }
+    window.addEventListener('hashchange', openFromHash);
+    openFromHash();
+  </script>
+</body>
+</html>
